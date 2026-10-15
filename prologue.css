@@ -70,7 +70,7 @@
 #lm-prologue .lm-dialog button{display:block;margin-left:auto;background:none;color:#e6cad3;border:0;padding:4px 0;font-size:12px}
 #lm-prologue .lm-dialog button:hover{color:#fff}
 #lm-prologue .lm-replay-note{position:absolute;right:18px;bottom:16px;z-index:3;font-size:10px;color:#fffd}
-#lm-thought{position:fixed;left:22px;bottom:22px;z-index:1100;width:min(356px,calc(100vw - 44px));background:#25232af0;color:#fff;border:1px solid #ffffff45;border-radius:10px;padding:17px 17px 14px;box-shadow:0 12px 40px #1116;backdrop-filter:blur(13px);font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;animation:lm-appear .2s ease-out}
+#lm-thought{position:fixed;left:22px;bottom:22px;z-index:28;width:min(356px,calc(100vw - 44px));background:#25232af0;color:#fff;border:1px solid #ffffff45;border-radius:10px;padding:17px 17px 14px;box-shadow:0 12px 40px #1116;backdrop-filter:blur(13px);font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;animation:lm-appear .2s ease-out}
 #lm-thought .lm-speaker{font-size:10px;letter-spacing:.08em;color:#dab3c0;margin-bottom:11px}
 #lm-thought p{font-size:13px;line-height:1.85;margin:0 0 12px;white-space:pre-line}
 #lm-thought button{margin-left:auto;display:block;background:transparent;border:0;color:#e7c6d0;font-size:11px;cursor:pointer;padding:4px}
