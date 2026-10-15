@@ -11,7 +11,7 @@
 #lm-prologue .lm-menu-left,#lm-prologue .lm-menu-right{display:flex;gap:18px;align-items:center}
 #lm-prologue .lm-menu strong{font-size:14px}
 #lm-prologue .lm-stage{position:relative;z-index:1;min-height:calc(100dvh - 29px);display:flex;align-items:center;justify-content:center;padding:32px 24px 110px}
-#lm-prologue .lm-window{width:min(870px,100%);background:#fffefa;border-radius:13px;overflow:hidden;box-shadow:0 32px 90px #10202e68,0 2px 12px #1e27312e;border:1px solid #ffffffad;animation:lm-appear .35s ease-out}
+#lm-prologue .lm-window{width:min(870px,100%);background:#fffefa;border-radius:13px;overflow:hidden;box-shadow:0 32px 90px #10202e68,0 2px 12px #1e27312e;border:1px solid #ffffffad}
 @keyframes lm-appear{from{opacity:0;transform:translateY(13px) scale(.987)}to{opacity:1;transform:none}}
 #lm-prologue .lm-titlebar{height:44px;display:flex;align-items:center;background:#f4f4f4;border-bottom:1px solid #e5e5e5;padding:0 16px;gap:13px}
 #lm-prologue .lm-traffic{display:flex;gap:7px}
