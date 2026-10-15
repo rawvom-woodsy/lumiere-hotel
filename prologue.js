@@ -48,7 +48,7 @@ host.addEventListener('click',e=>{
 const hit=e.target.closest('[data-lm]');if(!hit)return;
 const act=hit.dataset.lm;
 if(act==='openmail'){screen='mail';line=0;draw()}
-if(act==='next'){if(line<speech.length-1){line++;draw()}else{screen='search';draw()}}
+if(act==='next'){if(line<speech.length-1){line++;const box=overlay?.querySelector('.lm-dialog');if(box){box.querySelector('p').textContent=speech[line];box.querySelector('[data-lm="next"]').textContent=line===speech.length-1?'Safari 열기 →':'계속 ↗';}else{draw()}}else{screen='search';draw()}}
 if(act==='fill'){const i=overlay?.querySelector('#lm-query');if(i){i.value='혼자 여행하기 좋은 조용한 여행지';i.focus()}}
 if(act==='article'){screen='article';draw()}
 if(act==='hotel')finish();
