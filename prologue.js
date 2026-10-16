@@ -103,25 +103,40 @@ deskStyle.textContent="#lm-mini-dock{position:fixed;bottom:16px;right:16px;z-ind
 deskStyle.textContent+='#lm-mini-dock{top:0!important;bottom:auto!important;right:auto!important;left:50%!important;transform:translateX(-50%);border-radius:0 0 12px 12px!important;background:#efeff1f0!important;border-color:#d7d7d7!important}#lm-mini-dock button{color:#292929!important;background:transparent!important}#lm-mini-dock button:hover{background:#ddd!important}';document.head.appendChild(deskStyle);
 const mini=document.createElement('div');mini.id='lm-mini-dock';mini.innerHTML='<button type="button" data-pc="hotel">◇ HOTEL</button><button type="button" data-pc="safari">◉ Safari</button><button type="button" data-pc="mail">✉ Mail</button>';document.body.appendChild(mini);
 mini.addEventListener('click',e=>{const v=e.target.closest('[data-pc]')?.dataset.pc;if(v==='hotel'){document.getElementById('lm-promo-desktop')?.remove();return}if(v&&!overlay)promoDesktop(v)});
+let promoArticle=-1,mailDetails=false;
 function promoDesktop(view){
 document.getElementById('lm-promo-desktop')?.remove();deskOpen=true;
 const root=document.createElement('div');root.id='lm-promo-desktop';document.body.appendChild(root);
 let contents='';
 if(view==='safari'){
 contents='<h2 style="font-size:21px">Safari 검색</h2><form id="lm-query-form"><input id="lm-web-query" placeholder="검색어 또는 웹사이트 이름 입력" value="'+safe(searchValue)+'"/><button class="go">검색</button></form>';
-if(searchValue){contents+='<p style="color:#888;font-size:11px;margin-top:25px">검색 결과 · '+safe(searchValue)+'</p>';
-for(const [name,code] of [['10월 뤼미에르 호텔 프라이빗 리트릿 코드','SN1010'],['9월 루미에르 호텔 특별 프로모션','AB0912'],['8월 프라이빗 리트릿 할인코드','SR0808']])contents+='<div class="result"><small style="color:#888">지난 여행자들의 할인 정보</small><br><strong>'+name+'</strong><p>'+code+'</p></div>';
-contents+='<p style="font-size:12px;color:#888">11월 프로모션 코드는 검색되지 않았습니다.</p>'}
+if(!searchValue)contents+='<button class="go" id="lm-pc-suggestion" style="background:#f5edf0;color:#652f40;border:1px solid #dfc9d1">뤼미에르 호텔 프라이빗 리트릿 프로모션 코드 ↗</button>';
+if(searchValue){
+if(/(뤼미에르|루미에르|lumiere|리트릿|프로모션)/i.test(searchValue)){
+contents+='<p style="color:#888;font-size:11px;margin-top:25px">검색 결과 · '+safe(searchValue)+'</p>';
+const links=[['10월 프라이빗 리트릿 할인코드 공유해요','10월에 다녀온 여행자의 할인 신청 경험'],['9월 뤼미에르 호텔 할인받아 다녀온 후기','프라이빗 리트릿 실제 투숙 후기'],['8월 스위트룸 특별 프로모션 후기','여름 휴가 중 경험한 프라이빗 리트릿']];
+for(let i=0;i<links.length;i++)contents+='<div class="result"><small style="color:#888">개인 블로그 · 여행 후기</small><br><button type="button" data-lm-searcharticle="'+i+'" style="border:0;background:none;color:#295e9e;font-weight:bold;font-size:15px;padding:7px 0;text-align:left;cursor:pointer">'+links[i][0]+'</button><p>'+links[i][1]+'</p></div>';
+contents+='<p style="font-size:12px;color:#888">11월 프로모션 코드는 검색되지 않았습니다.</p>';
+}else contents+='<p style="font-size:13px;color:#777;margin-top:25px">검색어와 관련된 결과가 없습니다. 다른 검색어를 입력해 보세요.</p>';
+}
+if(promoArticle>=0){const items=[['10월 10일의 Silent Night에 참여했어요.','신청할 때 사용한 코드가 SN1010이었습니다. 덕분에 스위트에 저렴하게 머물렀어요.'],['9월 12일에 친구와 다녀왔어요.','Autumn Balance 프로그램으로 안내받았고 코드는 AB0912였습니다. 객실 상태도 좋아요.'],['8월 8일에 스위트룸을 이용했습니다.','Summer Rest 프로그램의 할인 코드는 SR0808이었어요. 여름휴가에 정말 유용했습니다.']];const item=items[promoArticle];contents='<button id="lm-article-back" style="border:0;background:none;color:#356098;cursor:pointer">← 검색 결과</button><div style="margin-top:24px;color:#999;font-size:11px">개인 여행 후기 · 뤼미에르 호텔</div><h2 style="font-size:20px">'+item[0]+'</h2><p style="font-size:13px;line-height:2.2">'+item[1]+'</p><p style="font-size:12px;color:#777;margin-top:28px">※ 지난 시즌에 이용한 프로모션에 관한 글입니다.</p>';}
 }else if(view==='mail'){
-contents='<p style="font-size:12px;color:#777">받은 편지함 · '+PROMO_MAIL+'</p><div class="result"><strong>채용 결과 안내</strong><p>지원해 주셔서 감사합니다.</p></div>';
+contents='<p style="font-size:12px;color:#777">받은 편지함 · '+PROMO_MAIL+'</p><button id="lm-rejection-open" class="result" style="display:block;text-align:left;width:100%;background:#f6f8fa;border:1px solid #eee;cursor:pointer"><strong>채용담당자 · [채용 결과 안내] 지원해 주셔서 감사합니다.</strong><p>채용 전형 결과를 안내드립니다.</p></button>';
 if(promoValid)contents+='<button class="go" id="lm-invite-open">● LUMIÈRE HOTEL · 프라이빗 리트릿 특별 초대 안내</button>';
-else contents+='<p style="font-size:12px;color:#999">새로 도착한 메일이 없습니다.</p>';
+}else if(view==='rejection'){
+contents='<button id="lm-mail-back" style="border:0;background:none;color:#3c6396;cursor:pointer">← 받은편지함</button><h2 style="font-size:19px">[채용 결과 안내] 지원해 주셔서 감사합니다.</h2><div style="font-size:12px;border-bottom:1px solid #ddd;padding:12px 0">채용담당자 &lt;info@samson.com&gt;<br><button id="lm-mail-detail" style="border:0;background:none;padding:7px 0;color:#777;cursor:pointer">받는 사람 ▼</button>'+(mailDetails?'<div style="background:#f8f8f8;padding:13px;line-height:2"><b>보낸 사람:</b> info@samson.com<br><b>받는 사람:</b> '+PROMO_MAIL+'<br><b>날짜:</b> 2026. 11. 2. 오후 2:32<br><b>제목:</b> [채용 결과 안내] 지원해 주셔서 감사합니다.<br><b>발송 도메인:</b> samson.com<br><b>보안:</b> 표준 암호화(TLS)</div>':'')+'</div><div style="font-size:13px;line-height:2.1;margin-top:25px">안녕하세요, 지원자님.<p>먼저 당사 채용에 관심을 가지고 지원해 주신 점 진심으로 감사드립니다.</p><p>신중한 검토 끝에 아쉽게도 이번 채용 전형에서는 함께하지 못하게 되었음을 안내드립니다.</p><p>앞으로 지원자님의 앞날에 좋은 일들이 가득하시길 기원합니다.</p>감사합니다.<br>채용담당자 드림</div>';
 }else{
-contents='<p style="font-size:11px;color:#9d6879">PRIVATE INVITATION · LUMIÈRE RETREAT</p><h2>LUMIÈRE HOTEL</h2><p>프라이빗 리트릿 특별 프로모션에 신청해 주셔서 감사합니다.</p><p>아래 정보를 확인하신 후 공식 홈페이지에서 예약을 진행해 주세요.</p><div style="padding:20px;background:#f9f2f4;line-height:2.2"><b>체크인</b>　2026. 11. 14<br><b>객실</b>　루미에르 스위트<br><b>요금</b>　KRW 129,000 / 1박</div><button class="go" id="lm-invite-reserve">호텔에서 예약하기 ↗</button>';
+contents='<button id="lm-mail-back" style="border:0;background:none;color:#3c6396;cursor:pointer">← 받은편지함</button><p style="font-size:11px;color:#9d6879">PRIVATE INVITATION · LUMIÈRE RETREAT</p><h2>LUMIÈRE HOTEL</h2><p>프라이빗 리트릿 특별 프로모션에 신청해 주셔서 감사합니다.</p><p>아래 정보를 확인하신 후 공식 홈페이지에서 예약을 진행해 주세요.</p><div style="padding:20px;background:#f9f2f4;line-height:2.2"><b>체크인</b>　2026. 11. 14<br><b>객실</b>　루미에르 스위트<br><b>요금</b>　KRW 129,000 / 1박</div><button class="go" id="lm-invite-reserve">호텔에서 예약하기 ↗</button>';
 }
 root.innerHTML='<div class="win"><header><span>●　●　●</span><b>'+(view==='safari'?'Safari':'Mail')+'</b><button id="lm-pc-close">×</button></header><section>'+contents+'</section></div>';
 root.querySelector('#lm-pc-close').onclick=()=>{root.remove();deskOpen=false};
-root.querySelector('#lm-query-form')?.addEventListener('submit',e=>{e.preventDefault();searchValue=root.querySelector('#lm-web-query').value.trim();promoDesktop('safari')});
+root.querySelector('#lm-query-form')?.addEventListener('submit',e=>{e.preventDefault();searchValue=root.querySelector('#lm-web-query').value.trim();promoArticle=-1;promoDesktop('safari')});
+root.querySelector('#lm-pc-suggestion')?.addEventListener('click',()=>{searchValue='뤼미에르 호텔 프라이빗 리트릿 프로모션 코드';promoDesktop('safari')});
+root.querySelectorAll('[data-lm-searcharticle]').forEach(b=>b.addEventListener('click',()=>{promoArticle=Number(b.dataset.lmSearcharticle);promoDesktop('safari')}));
+root.querySelector('#lm-article-back')?.addEventListener('click',()=>{promoArticle=-1;promoDesktop('safari')});
+root.querySelector('#lm-rejection-open')?.addEventListener('click',()=>{mailDetails=false;promoDesktop('rejection')});
+root.querySelector('#lm-mail-detail')?.addEventListener('click',()=>{mailDetails=!mailDetails;promoDesktop('rejection')});
+root.querySelector('#lm-mail-back')?.addEventListener('click',()=>promoDesktop('mail'));
 root.querySelector('#lm-invite-open')?.addEventListener('click',()=>promoDesktop('invite'));
 root.querySelector('#lm-invite-reserve')?.addEventListener('click',()=>{root.remove();deskOpen=false;invitationRead=true;const date=document.getElementById('checkin'),out=document.getElementById('checkout'),room=document.getElementById('room-choice');if(date)date.value='2026-11-14';if(out)out.value='2026-11-15';if(room)room.value='suite';document.getElementById('booking-form')?.scrollIntoView({behavior:'smooth',block:'center'})});
 }
