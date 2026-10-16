@@ -156,14 +156,20 @@ promoValid=true;try{sessionStorage.setItem('lm_promo_valid_v2','1')}catch(e){}
 err.style.color='#356843';err.textContent='신청되었습니다. Mail에서 초대장을 확인해 주세요.';
 });
 }
+function showReviewAfterClose(){
+  if(document.getElementById('modal-scrim')?.classList.contains('open'))return;
+  let d=document.getElementById('lm-thought');
+  if(!d){d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p></p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}
+  d.querySelector('p').textContent='프로모션 코드? 인터넷에 검색해 볼까?';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && window.__lm_reviewPopupVisited && !window.__lm_reviewHint && document.querySelector('#modal-content .all-reviews')){window.__lm_reviewHint=true;setTimeout(showReviewAfterClose,100)}});
 document.addEventListener('click',e=>{
 if(e.target.closest('[data-notice="0"]')||e.target.closest('#retreat-details'))setTimeout(promoApply,0);
 if(e.target.closest('#all-reviews-btn')){window.__lm_reviewPopupVisited=true}
 if(window.__lm_reviewPopupVisited && !window.__lm_reviewHint && (e.target.closest('#modal-close')||e.target.id==='modal-scrim')){
-  const scrim=document.getElementById('modal-scrim');
-  if(scrim?.classList.contains('open')){
-    const isReviews=!!document.querySelector('#modal-content .all-reviews');
-    if(isReviews){window.__lm_reviewHint=true;setTimeout(()=>{if(document.getElementById('modal-scrim')?.classList.contains('open'))return;let d=document.getElementById('lm-thought');if(!d){d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p></p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}d.querySelector('p').textContent='프로모션 코드? 인터넷에 검색해 볼까?';},100)}
+  if(document.querySelector('#modal-content .all-reviews') && !document.getElementById('modal-scrim')?.classList.contains('open')){
+    window.__lm_reviewHint=true;
+    setTimeout(showReviewAfterClose,100);
   }
 }
 if(e.target.closest('[data-select-room]')&& !window.__lm_priceThought){window.__lm_priceThought=true;setTimeout(()=>{if(!overlay){let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>역시 나한테는 너무 비싸구나…</p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}},160)}
