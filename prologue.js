@@ -159,6 +159,10 @@ if(e.target.closest('[data-notice="0"]')||e.target.closest('#retreat-details'))s
 if(e.target.closest('#review-preview')||e.target.closest('#all-reviews-btn')){if(!window.__lm_reviewHint){window.__lm_reviewHint=true;setTimeout(()=>{let d=document.getElementById('lm-thought');if(!d){d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p></p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}d.querySelector('p').textContent='프로모션 코드? 인터넷에 검색해 볼까?';},220)}}
 if(e.target.closest('[data-select-room]')&& !window.__lm_priceThought){window.__lm_priceThought=true;setTimeout(()=>{if(!overlay){let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>역시 나한테는 너무 비싸구나…</p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}},160)}
 });
+if('IntersectionObserver' in window){
+const preview=document.querySelector('#review-preview .review-card');
+if(preview){const watcher=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting)||window.__lm_reviewHint||document.getElementById('lm-prologue'))return;window.__lm_reviewHint=true;watcher.disconnect();let d=document.getElementById('lm-thought');if(!d){d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p></p><button type="button">계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}d.querySelector('p').textContent='프로모션 코드? 인터넷에 검색해 볼까?';},{threshold:0.6});watcher.observe(preview)}
+}
 window.LumiereRetreat={get invited(){return promoValid && invitationRead},get issued(){return promoValid},email:PROMO_MAIL};
 
 })();
