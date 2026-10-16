@@ -100,12 +100,14 @@ let promoValid=false,deskOpen=false,invitationRead=false,searchValue='';
 try{promoValid=sessionStorage.getItem('lm_promo_valid_v2')==='1'}catch(e){}
 const deskStyle=document.createElement('style');
 deskStyle.textContent="#lm-mini-dock{position:fixed;bottom:16px;right:16px;z-index:1300;display:flex;gap:6px;background:#252733ed;border-radius:13px;border:1px solid #ffffff6e;padding:9px;box-shadow:0 8px 30px #0003}#lm-mini-dock button{border:0;border-radius:7px;padding:9px 12px;color:#fff;background:#ffffff18;cursor:pointer;font-size:12px}#lm-promo-desktop{position:fixed;inset:0;z-index:15000;background:linear-gradient(120deg,#aab3ca,#626a83,#34384d);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Arial,'Noto Sans KR',sans-serif}#lm-promo-desktop .win{background:#fff;width:min(780px,100%);max-height:90vh;overflow:auto;border-radius:13px;box-shadow:0 15px 70px #0005;color:#222}#lm-promo-desktop header{padding:14px 20px;background:#f2f2f3;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;font-size:12px}#lm-promo-desktop header button{border:0;background:transparent;cursor:pointer;font-size:18px}#lm-promo-desktop section{padding:28px;min-height:320px}#lm-promo-desktop input{width:100%;padding:13px;border:1px solid #ddd;border-radius:7px;font-size:14px;box-sizing:border-box}#lm-promo-desktop button.go{background:#5f1023;border:0;border-radius:4px;padding:11px 19px;color:white;margin-top:10px;cursor:pointer}#lm-promo-desktop .result{border-bottom:1px solid #eee;padding:15px 0;font-size:13px}#lm-promo-desktop .result strong{color:#35649a}#lm-promo-application{border-top:1px solid #ddd;margin-top:22px;padding-top:22px}#lm-promo-application label{display:block;font-size:12px;margin:10px 0 6px}#lm-promo-application input{border:1px solid #ddd;padding:12px;width:100%;box-sizing:border-box}#lm-promo-application button{margin-top:15px;background:#5f1023;color:#fff;padding:12px 20px;border:0;cursor:pointer}#lm-promo-error{font-size:12px;color:#93263e;margin-top:8px}";
-deskStyle.textContent+='#lm-mini-dock{top:0!important;bottom:auto!important;right:auto!important;left:50%!important;transform:translateX(-50%);border-radius:0 0 12px 12px!important;background:#efeff1f0!important;border-color:#d7d7d7!important}#lm-mini-dock button{color:#292929!important;background:transparent!important}#lm-mini-dock button:hover{background:#ddd!important}';document.head.appendChild(deskStyle);
+deskStyle.textContent+='#lm-mini-dock{top:0!important;bottom:auto!important;right:auto!important;left:50%!important;transform:translateX(-50%);border-radius:0 0 12px 12px!important;background:#efeff1f5!important;border-color:#d7d7d7!important;z-index:16001!important;box-shadow:0 5px 20px #0002!important}#lm-mini-dock button{color:#292929!important;background:transparent!important}#lm-mini-dock button:hover{background:#ddd!important}#lm-mini-dock button[aria-current="page"]{background:#fff!important;box-shadow:0 1px 5px #0002;font-weight:700}#lm-promo-desktop{padding-top:58px!important}body:has(#lm-prologue) #lm-mini-dock{display:none!important}@media(max-width:480px){#lm-mini-dock{width:max-content;max-width:calc(100vw - 16px)}#lm-mini-dock button{padding:8px 10px!important}}';document.head.appendChild(deskStyle);
 const mini=document.createElement('div');mini.id='lm-mini-dock';mini.innerHTML='<button type="button" data-pc="hotel">◇ HOTEL</button><button type="button" data-pc="safari">◉ Safari</button><button type="button" data-pc="mail">✉ Mail</button>';document.body.appendChild(mini);
-mini.addEventListener('click',e=>{const v=e.target.closest('[data-pc]')?.dataset.pc;if(v==='hotel'){document.getElementById('lm-promo-desktop')?.remove();return}if(v&&!overlay)promoDesktop(v)});
+function markDesktopTab(view){mini.querySelectorAll('[data-pc]').forEach(b=>{if(b.dataset.pc===view){b.setAttribute('aria-current','page')}else{b.removeAttribute('aria-current')}})}
+markDesktopTab('hotel');
+mini.addEventListener('click',e=>{const v=e.target.closest('[data-pc]')?.dataset.pc;if(v==='hotel'){document.getElementById('lm-promo-desktop')?.remove();deskOpen=false;markDesktopTab('hotel');return}if(v&&!overlay)promoDesktop(v)});
 let promoArticle=-1,mailDetails=false;
 function promoDesktop(view){
-document.getElementById('lm-promo-desktop')?.remove();deskOpen=true;
+document.getElementById('lm-promo-desktop')?.remove();deskOpen=true;markDesktopTab(view==='safari'?'safari':'mail');
 const root=document.createElement('div');root.id='lm-promo-desktop';document.body.appendChild(root);
 let contents='';
 if(view==='safari'){
@@ -130,7 +132,7 @@ contents='<button id="lm-mail-back" style="border:0;background:none;color:#3c639
 
 }
 root.innerHTML='<div class="win"><header><span>●　●　●</span><b>'+(view==='safari'?'Safari':'Mail')+'</b><button id="lm-pc-close">×</button></header><section>'+contents+'</section></div>';
-root.querySelector('#lm-pc-close').onclick=()=>{root.remove();deskOpen=false};
+root.querySelector('#lm-pc-close').onclick=()=>{root.remove();deskOpen=false;markDesktopTab('hotel')};
 root.querySelector('#lm-query-form')?.addEventListener('submit',e=>{e.preventDefault();searchValue=root.querySelector('#lm-web-query').value.trim();promoArticle=-1;promoDesktop('safari')});
 root.querySelector('#lm-pc-suggestion')?.addEventListener('click',()=>{searchValue='뤼미에르 호텔 프라이빗 리트릿 프로모션 코드';promoDesktop('safari')});
 root.querySelectorAll('[data-lm-searcharticle]').forEach(b=>b.addEventListener('click',()=>{promoArticle=Number(b.dataset.lmSearcharticle);promoDesktop('safari')}));
@@ -140,7 +142,7 @@ root.querySelector('#lm-mail-detail')?.addEventListener('click',()=>{mailDetails
 root.querySelector('#lm-invite-detail')?.addEventListener('click',()=>{mailDetails=!mailDetails;promoDesktop('invite')});
 root.querySelector('#lm-mail-back')?.addEventListener('click',()=>promoDesktop('mail'));
 root.querySelector('#lm-invite-open')?.addEventListener('click',()=>{mailDetails=false;promoDesktop('invite')});
-root.querySelector('#lm-invite-reserve')?.addEventListener('click',()=>{root.remove();deskOpen=false;invitationRead=true;const date=document.getElementById('checkin'),out=document.getElementById('checkout'),room=document.getElementById('room-choice');if(date)date.value='2026-11-14';if(out)out.value='2026-11-15';if(room)room.value='suite';document.getElementById('booking-form')?.scrollIntoView({behavior:'smooth',block:'center'})});
+root.querySelector('#lm-invite-reserve')?.addEventListener('click',()=>{root.remove();deskOpen=false;markDesktopTab('hotel');invitationRead=true;const date=document.getElementById('checkin'),out=document.getElementById('checkout'),room=document.getElementById('room-choice');if(date)date.value='2026-11-14';if(out)out.value='2026-11-15';if(room)room.value='suite';document.getElementById('booking-form')?.scrollIntoView({behavior:'smooth',block:'center'})});
 }
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function promoApply(){
