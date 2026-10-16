@@ -140,7 +140,7 @@ err.style.color='#356843';err.textContent='신청되었습니다. Mail에서 초
 });
 }
 document.addEventListener('click',e=>{
-if(e.target.closest('[data-notice="3"]')||e.target.closest('#retreat-details'))setTimeout(promoApply,0);
+if(e.target.closest('[data-notice="0"]')||e.target.closest('#retreat-details'))setTimeout(promoApply,0);
 if(e.target.closest('[data-select-room]')&& !window.__lm_priceThought){window.__lm_priceThought=true;setTimeout(()=>{if(!overlay){let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>역시 나한테는 너무 비싸구나…</p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}},160)}
 });
 window.LumiereRetreat={get invited(){return promoValid && invitationRead},get issued(){return promoValid},email:PROMO_MAIL};
