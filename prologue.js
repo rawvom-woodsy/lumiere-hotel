@@ -93,4 +93,56 @@ if(foot){
 const reset=document.createElement('button');reset.id='lm-reset';reset.type='button';reset.textContent='↺ 프롤로그 다시 보기';reset.addEventListener('click',()=>{document.getElementById('lm-thought')?.remove();window.scrollTo(0,0);begin()});foot.appendChild(reset);
 }
 if(!played||replay)begin();
+
+/* New: game-only desktop switching / seasonal promotion */
+const PROMO_MAIL='traveler@icloud.com';
+let promoValid=false,deskOpen=false,invitationRead=false,searchValue='';
+try{promoValid=sessionStorage.getItem('lm_promo_valid_v2')==='1'}catch(e){}
+const deskStyle=document.createElement('style');
+deskStyle.textContent="#lm-mini-dock{position:fixed;bottom:16px;right:16px;z-index:1300;display:flex;gap:6px;background:#252733ed;border-radius:13px;border:1px solid #ffffff6e;padding:9px;box-shadow:0 8px 30px #0003}#lm-mini-dock button{border:0;border-radius:7px;padding:9px 12px;color:#fff;background:#ffffff18;cursor:pointer;font-size:12px}#lm-promo-desktop{position:fixed;inset:0;z-index:15000;background:linear-gradient(120deg,#aab3ca,#626a83,#34384d);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Arial,'Noto Sans KR',sans-serif}#lm-promo-desktop .win{background:#fff;width:min(780px,100%);max-height:90vh;overflow:auto;border-radius:13px;box-shadow:0 15px 70px #0005;color:#222}#lm-promo-desktop header{padding:14px 20px;background:#f2f2f3;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;font-size:12px}#lm-promo-desktop header button{border:0;background:transparent;cursor:pointer;font-size:18px}#lm-promo-desktop section{padding:28px;min-height:320px}#lm-promo-desktop input{width:100%;padding:13px;border:1px solid #ddd;border-radius:7px;font-size:14px;box-sizing:border-box}#lm-promo-desktop button.go{background:#5f1023;border:0;border-radius:4px;padding:11px 19px;color:white;margin-top:10px;cursor:pointer}#lm-promo-desktop .result{border-bottom:1px solid #eee;padding:15px 0;font-size:13px}#lm-promo-desktop .result strong{color:#35649a}#lm-promo-application{border-top:1px solid #ddd;margin-top:22px;padding-top:22px}#lm-promo-application label{display:block;font-size:12px;margin:10px 0 6px}#lm-promo-application input{border:1px solid #ddd;padding:12px;width:100%;box-sizing:border-box}#lm-promo-application button{margin-top:15px;background:#5f1023;color:#fff;padding:12px 20px;border:0;cursor:pointer}#lm-promo-error{font-size:12px;color:#93263e;margin-top:8px}";
+document.head.appendChild(deskStyle);
+const mini=document.createElement('div');mini.id='lm-mini-dock';mini.innerHTML='<button type="button" data-pc="safari">◉ Safari</button><button type="button" data-pc="mail">✉ Mail</button>';document.body.appendChild(mini);
+mini.addEventListener('click',e=>{const v=e.target.closest('[data-pc]')?.dataset.pc;if(v&&!overlay)promoDesktop(v)});
+function promoDesktop(view){
+document.getElementById('lm-promo-desktop')?.remove();deskOpen=true;
+const root=document.createElement('div');root.id='lm-promo-desktop';document.body.appendChild(root);
+let contents='';
+if(view==='safari'){
+contents='<h2 style="font-size:21px">Safari 검색</h2><form id="lm-query-form"><input id="lm-web-query" placeholder="검색어 또는 웹사이트 이름 입력" value="'+safe(searchValue)+'"/><button class="go">검색</button></form>';
+if(searchValue){contents+='<p style="color:#888;font-size:11px;margin-top:25px">검색 결과 · '+safe(searchValue)+'</p>';
+for(const [name,code] of [['10월 뤼미에르 호텔 프라이빗 리트릿 코드','SN1010'],['9월 루미에르 호텔 특별 프로모션','AB0912'],['8월 프라이빗 리트릿 할인코드','SR0808']])contents+='<div class="result"><small style="color:#888">지난 여행자들의 할인 정보</small><br><strong>'+name+'</strong><p>'+code+'</p></div>';
+contents+='<p style="font-size:12px;color:#888">11월 프로모션 코드는 검색되지 않았습니다.</p>'}
+}else if(view==='mail'){
+contents='<p style="font-size:12px;color:#777">받은 편지함 · '+PROMO_MAIL+'</p><div class="result"><strong>채용 결과 안내</strong><p>지원해 주셔서 감사합니다.</p></div>';
+if(promoValid)contents+='<button class="go" id="lm-invite-open">● LUMIÈRE HOTEL · 프라이빗 리트릿 특별 초대 안내</button>';
+else contents+='<p style="font-size:12px;color:#999">새로 도착한 메일이 없습니다.</p>';
+}else{
+contents='<p style="font-size:11px;color:#9d6879">PRIVATE INVITATION · LUMIÈRE RETREAT</p><h2>LUMIÈRE HOTEL</h2><p>프라이빗 리트릿 특별 프로모션에 신청해 주셔서 감사합니다.</p><p>아래 정보를 확인하신 후 공식 홈페이지에서 예약을 진행해 주세요.</p><div style="padding:20px;background:#f9f2f4;line-height:2.2"><b>체크인</b>　2026. 11. 14<br><b>객실</b>　루미에르 스위트<br><b>요금</b>　KRW 129,000 / 1박</div><button class="go" id="lm-invite-reserve">호텔에서 예약하기 ↗</button>';
+}
+root.innerHTML='<div class="win"><header><span>●　●　●</span><b>'+(view==='safari'?'Safari':'Mail')+'</b><button id="lm-pc-close">×</button></header><section>'+contents+'</section></div>';
+root.querySelector('#lm-pc-close').onclick=()=>{root.remove();deskOpen=false};
+root.querySelector('#lm-query-form')?.addEventListener('submit',e=>{e.preventDefault();searchValue=root.querySelector('#lm-web-query').value.trim();promoDesktop('safari')});
+root.querySelector('#lm-invite-open')?.addEventListener('click',()=>promoDesktop('invite'));
+root.querySelector('#lm-invite-reserve')?.addEventListener('click',()=>{root.remove();deskOpen=false;invitationRead=true;const date=document.getElementById('checkin'),out=document.getElementById('checkout'),room=document.getElementById('room-choice');if(date)date.value='2026-11-14';if(out)out.value='2026-11-15';if(room)room.value='suite';document.getElementById('booking-form')?.scrollIntoView({behavior:'smooth',block:'center'})});
+}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function promoApply(){
+const content=document.getElementById('modal-content');if(!content||content.querySelector('#lm-promo-application'))return;
+const form=document.createElement('form');form.id='lm-promo-application';
+form.innerHTML='<div style="font-size:11px;letter-spacing:.12em;color:#6d3444">SPECIAL PROMOTION</div><h3>프라이빗 리트릿 프로모션 신청</h3><p style="font-size:13px">프로모션 코드와 이메일을 입력하면 초대장을 발송해 드립니다.</p><label>프로모션 코드</label><input name="code" placeholder="예: XX0000" required/><label>이메일 주소</label><input name="email" type="email" placeholder="게임 속 메일 주소" required/><div id="lm-promo-error"></div><button>초대장 신청하기 →</button><p style="font-size:11px;color:#888">게임 속 가상 메일함으로만 발송되며 실제 이메일은 전송되지 않습니다.</p>';
+content.appendChild(form);
+form.querySelector('[name="code"]').addEventListener('focus',()=>{document.getElementById('lm-thought')?.remove();let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>프로모션 코드… 인터넷에서 검색해 볼까?</p><button type="button">계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)});
+form.addEventListener('submit',e=>{e.preventDefault();const c=form.elements.code.value.trim().toUpperCase(),m=form.elements.email.value.trim().toLowerCase(),err=form.querySelector('#lm-promo-error');
+if(c!=='NB1114'){err.textContent='프로모션 코드가 유효하지 않습니다. 다시 확인해 주세요.';return}
+if(m!==PROMO_MAIL){err.textContent='게임 속 Mail 계정의 이메일 주소를 확인해 주세요.';return}
+promoValid=true;try{sessionStorage.setItem('lm_promo_valid_v2','1')}catch(e){}
+err.style.color='#356843';err.textContent='신청되었습니다. Mail에서 초대장을 확인해 주세요.';
+});
+}
+document.addEventListener('click',e=>{
+if(e.target.closest('[data-notice="0"]')||e.target.closest('#retreat-details'))setTimeout(promoApply,0);
+if(e.target.closest('[data-select-room]')&& !window.__lm_priceThought){window.__lm_priceThought=true;setTimeout(()=>{if(!overlay){let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>역시 나한테는 너무 비싸구나…</p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}},160)}
+});
+window.LumiereRetreat={get invited(){return promoValid && invitationRead},get issued(){return promoValid},email:PROMO_MAIL};
+
 })();
