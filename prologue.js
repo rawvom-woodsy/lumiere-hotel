@@ -126,7 +126,7 @@ if(promoValid)contents+='<button id="lm-invite-open" class="result" style="displ
 }else if(view==='rejection'){
 contents='<button id="lm-mail-back" style="border:0;background:none;color:#3c6396;cursor:pointer">← 받은편지함</button><h2 style="font-size:19px">[채용 결과 안내] 지원해 주셔서 감사합니다.</h2><div style="font-size:12px;border-bottom:1px solid #ddd;padding:12px 0">채용담당자 &lt;info@samson.com&gt;<br><button id="lm-mail-detail" style="border:0;background:none;padding:7px 0;color:#777;cursor:pointer">받는 사람 ▼</button>'+(mailDetails?'<div style="background:#f8f8f8;padding:13px;line-height:2"><b>보낸 사람:</b> info@samson.com<br><b>받는 사람:</b> '+PROMO_MAIL+'<br><b>날짜:</b> 2026. 11. 2. 오후 2:32<br><b>제목:</b> [채용 결과 안내] 지원해 주셔서 감사합니다.<br><b>발송 도메인:</b> samson.com<br><b>보안:</b> 표준 암호화(TLS)</div>':'')+'</div><div style="font-size:13px;line-height:2.1;margin-top:25px">안녕하세요, 지원자님.<p>먼저 당사 채용에 관심을 가지고 지원해 주신 점 진심으로 감사드립니다.</p><p>신중한 검토 끝에 아쉽게도 이번 채용 전형에서는 함께하지 못하게 되었음을 안내드립니다.</p><p>앞으로 지원자님의 앞날에 좋은 일들이 가득하시길 기원합니다.</p>감사합니다.<br>채용담당자 드림</div>';
 }else{
-contents='<button id="lm-mail-back" style="border:0;background:none;color:#3c6396;cursor:pointer">← 받은편지함</button><h2 style="font-size:19px;margin:22px 0 8px">프라이빗 리트릿 특별 초대 안내</h2><div style="font-size:12px;border-bottom:1px solid #ddd;padding:12px 0"><strong>뤼미에르 호텔 예약팀</strong> &lt;info@lumierehotel.com&gt;<br><button id="lm-invite-detail" style="border:0;background:none;padding:7px 0;color:#777;cursor:pointer">받는 사람 ▼</button>　'+PROMO_MAIL+(mailDetails?'<div style="background:#f8f8f8;padding:13px;line-height:2"><b>보낸 사람:</b> info@lumierehotel.com<br><b>받는 사람:</b> '+PROMO_MAIL+'<br><b>날짜:</b> 2026. 10. 16. 오후 3:10<br><b>제목:</b> 프라이빗 리트릿 특별 초대 안내<br><b>발송 도메인:</b> lumierehotel.example<br><b>보안:</b> 표준 암호화(TLS)</div>':'')+'</div><div style="font-size:13px;line-height:2.1;margin-top:26px"><p>안녕하세요, 고객님.</p><p>뤼미에르 호텔의 프라이빗 리트릿 프로모션에 관심을 가져주셔서 감사합니다.</p><p>고객님의 프로모션 신청이 확인되어 아래 일정에 특별 초대해 드립니다.</p><div style="background:#f9f5f6;padding:18px 22px;margin:24px 0;border-left:3px solid #5f1023"><b>체크인</b>　2026년 11월 14일<br><b>객실 유형</b>　루미에르 스위트<br><b>특별 요금</b>　129,000원 / 1박</div><p>지정된 날짜와 객실 유형을 선택하시면 특별 프로모션 예약을 진행하실 수 있습니다.</p><p>뤼미에르 호텔에서 편안한 시간을 보내시길 바랍니다.</p><p>감사합니다.<br>뤼미에르 호텔 예약팀 드림</p><button class="go" id="lm-invite-reserve">객실 예약하기 ↗</button></div>';
+contents='<button id="lm-mail-back" style="border:0;background:none;color:#3c6396;cursor:pointer">← 받은편지함</button><h2 style="font-size:19px;margin:22px 0 8px">프라이빗 리트릿 특별 초대 안내</h2><div style="font-size:12px;border-bottom:1px solid #ddd;padding:12px 0"><strong>뤼미에르 호텔 예약팀</strong> &lt;info@lumierehotel.com&gt;<br><button id="lm-invite-detail" style="border:0;background:none;padding:7px 0;color:#777;cursor:pointer">받는 사람 ▼</button>　'+PROMO_MAIL+(mailDetails?'<div style="background:#f8f8f8;padding:13px;line-height:2"><b>보낸 사람:</b> info@lumierehotel.com<br><b>받는 사람:</b> '+PROMO_MAIL+'<br><b>날짜:</b> 2026. 10. 16. 오후 3:10<br><b>제목:</b> 프라이빗 리트릿 특별 초대 안내<br><b>발송 도메인:</b> lumierehotel.com<br><b>보안:</b> 표준 암호화(TLS)</div>':'')+'</div><div style="font-size:13px;line-height:2.1;margin-top:26px"><p>안녕하세요, 고객님.</p><p>뤼미에르 호텔의 프라이빗 리트릿 프로모션에 관심을 가져주셔서 감사합니다.</p><p>고객님의 프로모션 신청이 확인되어 아래 일정에 특별 초대해 드립니다.</p><div style="background:#f9f5f6;padding:18px 22px;margin:24px 0;border-left:3px solid #5f1023"><b>체크인</b>　2026년 11월 14일<br><b>객실 유형</b>　루미에르 스위트<br><b>특별 요금</b>　129,000원 / 1박</div><p>지정된 날짜와 객실 유형을 선택하시면 특별 프로모션 예약을 진행하실 수 있습니다.</p><p>뤼미에르 호텔에서 편안한 시간을 보내시길 바랍니다.</p><p>감사합니다.<br>뤼미에르 호텔 예약팀 드림</p><button class="go" id="lm-invite-reserve">객실 예약하기 ↗</button></div>';
 
 }
 root.innerHTML='<div class="win"><header><span>●　●　●</span><b>'+(view==='safari'?'Safari':'Mail')+'</b><button id="lm-pc-close">×</button></header><section>'+contents+'</section></div>';
@@ -162,16 +162,21 @@ function showReviewAfterClose(){
   if(!d){d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p></p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}
   d.querySelector('p').textContent='프로모션 코드? 인터넷에 검색해 볼까?';
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape' && window.__lm_reviewPopupVisited && !window.__lm_reviewHint && document.querySelector('#modal-content .all-reviews')){window.__lm_reviewHint=true;setTimeout(showReviewAfterClose,100)}});
+// Show the thought only after the all-reviews modal has actually closed.
+const reviewScrim=document.getElementById('modal-scrim');
+if(reviewScrim){
+  const reviewObserver=new MutationObserver(()=>{
+    if(!window.__lm_reviewPopupVisited||window.__lm_reviewHint)return;
+    if(reviewScrim.classList.contains('open'))return;
+    if(!document.querySelector('#modal-content .all-reviews'))return;
+    window.__lm_reviewHint=true;
+    setTimeout(showReviewAfterClose,80);
+  });
+  reviewObserver.observe(reviewScrim,{attributes:true,attributeFilter:['class']});
+}
 document.addEventListener('click',e=>{
 if(e.target.closest('[data-notice="0"]')||e.target.closest('#retreat-details'))setTimeout(promoApply,0);
-if(e.target.closest('#all-reviews-btn')){window.__lm_reviewPopupVisited=true}
-if(window.__lm_reviewPopupVisited && !window.__lm_reviewHint && (e.target.closest('#modal-close')||e.target.id==='modal-scrim')){
-  if(document.querySelector('#modal-content .all-reviews') && !document.getElementById('modal-scrim')?.classList.contains('open')){
-    window.__lm_reviewHint=true;
-    setTimeout(showReviewAfterClose,100);
-  }
-}
+if(e.target.closest('#all-reviews-btn'))window.__lm_reviewPopupVisited=true;
 if(e.target.closest('[data-select-room]')&& !window.__lm_priceThought){window.__lm_priceThought=true;setTimeout(()=>{if(!overlay){let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>역시 나한테는 너무 비싸구나…</p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}},160)}
 });
 window.LumiereRetreat={get invited(){return promoValid && invitationRead},get issued(){return promoValid},email:PROMO_MAIL};
