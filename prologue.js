@@ -81,7 +81,7 @@ document.addEventListener('click',e=>{
 if(overlay)return;
 const t=e.target;
 if(t.closest('#notice-list [data-notice]'))once('notice','이런 프로그램도 운영하네. 좀 더 살펴볼까.');
-if(t.closest('#all-reviews-btn'))once('reviews','후기가 꽤 많다. 사람들마다 쉬는 방식도 참 다르네.');
+// The review-specific thought is handled only after its popup closes.
 if(t.closest('[data-select-room]'))once('rooms','혼자 쓰기엔 조금 사치일까. 그래도 이번엔 편하게 쉬고 싶은데.');
 if(t.closest('#retreat-details'))once('retreat','웰니스 프로그램이라… 쉬러 가는 김에 참여해 볼까?');
 if(t.closest('#modal-close')||t.id==='modal-scrim')afterModal();
@@ -158,29 +158,35 @@ promoValid=true;try{sessionStorage.setItem('lm_promo_valid_v2','1')}catch(e){}
 err.style.color='#356843';err.textContent='신청되었습니다. Mail에서 초대장을 확인해 주세요.';
 });
 }
-function showReviewAfterClose(){
-  if(document.getElementById('modal-scrim')?.classList.contains('open'))return;
-  let d=document.getElementById('lm-thought');
-  if(!d){d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p></p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}
-  d.querySelector('p').textContent='프로모션 코드? 인터넷에 검색해 볼까?';
-}
-// Show the thought only after the all-reviews modal has actually closed.
+// Review clue: allow Safari hints only after the player actually opens and closes all reviews.
+let reviewPopupRequested=false;
+let reviewPopupOpened=false;
+let reviewClueDelivered=false;
 const reviewScrim=document.getElementById('modal-scrim');
+function reviewIsOpen(){return !!reviewScrim?.classList.contains('open')}
+function showReviewAfterClose(){
+  if(reviewClueDelivered || !reviewPopupRequested || !reviewPopupOpened || reviewIsOpen())return;
+  reviewClueDelivered=true;
+  window.__lm_reviewHint=true;
+  window.__lm_reviewPopupVisited=true;
+  const oldThought=document.getElementById('lm-thought');
+  oldThought?.remove();
+  thought('프로모션 코드? 인터넷에 검색해 볼까?');
+}
+function evaluateReviewClose(){
+  if(reviewPopupRequested && reviewIsOpen())reviewPopupOpened=true;
+  if(reviewPopupOpened && !reviewIsOpen())setTimeout(showReviewAfterClose,90);
+}
 if(reviewScrim){
-  const reviewObserver=new MutationObserver(()=>{
-    if(!window.__lm_reviewPopupVisited||window.__lm_reviewHint)return;
-    if(reviewScrim.classList.contains('open'))return;
-    if(!document.querySelector('#modal-content .all-reviews'))return;
-    window.__lm_reviewHint=true;
-    setTimeout(showReviewAfterClose,80);
-  });
-  reviewObserver.observe(reviewScrim,{attributes:true,attributeFilter:['class']});
+  new MutationObserver(evaluateReviewClose).observe(reviewScrim,{attributes:true,attributeFilter:['class','style']});
 }
 document.addEventListener('click',e=>{
 if(e.target.closest('[data-notice="0"]')||e.target.closest('#retreat-details'))setTimeout(promoApply,0);
-if(e.target.closest('#all-reviews-btn'))window.__lm_reviewPopupVisited=true;
+if(e.target.closest('#all-reviews-btn')){reviewPopupRequested=true;setTimeout(evaluateReviewClose,0)}
+if(reviewPopupRequested && (e.target.closest('#modal-close') || e.target.id==='modal-scrim'))setTimeout(evaluateReviewClose,100);
 if(e.target.closest('[data-select-room]')&& !window.__lm_priceThought){window.__lm_priceThought=true;setTimeout(()=>{if(!overlay){let d=document.createElement('div');d.id='lm-thought';d.innerHTML='<div class="lm-speaker">나의 생각</div><p>역시 나한테는 너무 비싸구나…</p><button>계속 둘러보기 ↗</button>';d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}},160)}
 });
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && reviewPopupRequested)setTimeout(evaluateReviewClose,100)});
 window.LumiereRetreat={get invited(){return promoValid && invitationRead},get issued(){return promoValid},email:PROMO_MAIL};
 
 })();
